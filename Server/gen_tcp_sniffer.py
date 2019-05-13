@@ -1,0 +1,93 @@
+import socket
+import struct
+from new_packet_sniffer import Ethernet
+from new_packet_sniffer import ARP
+from new_packet_sniffer import IP
+from new_packet_sniffer import ICMP
+from new_packet_sniffer import Echo
+from new_packet_sniffer import UDP
+from new_packet_sniffer import TCP
+from new_packet_sniffer import Packet
+
+raw = socket.socket(socket.AF_PACKET, socket.SOCK_RAW, socket.htons(0x0003))
+raw.bind(('eth0',0))
+
+while True:
+  data = raw.recv(65535)
+  packet = Packet(data)
+  if packet.eth.type == 0x0800 and packet.ip.protocol == 1124:
+    print("********************* IP Header ********************")
+    print(packet.ip.srcIp, '->', packet.ip.dstIp, packet.eth.type)
+    print('versionLen =', packet.ip.versionLen)
+    print('version =', packet.ip.version)
+    print('headerLen =', packet.ip.headerLen)
+    print('typeOfService =', packet.ip.typeOfService)
+    print('totLength =', packet.ip.totLength)
+    print('identification =', packet.ip.identification)
+    print('ipFlags =', packet.ip.ipFlags)
+    print('fragmentOffset =', packet.ip.fragmentOffset)
+    print('timeToLive =', packet.ip.timeToLive)
+    print('protocol =', packet.ip.protocol)
+    print('headerChecksum =', packet.ip.headerChecksum)
+    print('srcIp =', packet.ip.srcIp)
+    print('dstIp =', packet.ip.dstIp)
+    print("******************** ICMP Header *******************")
+    print('type =', packet.echo.type)
+    print('code =', packet.echo.code)
+    print('chksum =', packet.echo.chksum)
+    print('id =', packet.echo.id)
+    print('seq =', packet.echo.seq)
+    print('payload =', packet.echo.payload)
+    print("rawpacket =", packet.raw)
+  elif packet.eth.type == 0x0800 and packet.ip.protocol == 17151 and ( packet.ip.dstIp == '172.16.0.144' or packet.ip.srcIp == '172.16.0.144' ):
+    print("********************* IP Header ********************")
+    print(packet.ip.srcIp, '->', packet.ip.dstIp, packet.eth.type)
+    print('versionLen =', packet.ip.versionLen)
+    print('version =', packet.ip.version)
+    print('headerLen =', packet.ip.headerLen)
+    print('typeOfService =', packet.ip.typeOfService)
+    print('totLength =', packet.ip.totLength)
+    print('identification =', packet.ip.identification)
+    print('ipFlags =', packet.ip.ipFlags)
+    print('fragmentOffset =', packet.ip.fragmentOffset)
+    print('timeToLive =', packet.ip.timeToLive)
+    print('protocol =', packet.ip.protocol)
+    print('headerChecksum =', packet.ip.headerChecksum)
+    print('srcIp =', packet.ip.srcIp)
+    print('dstIp =', packet.ip.dstIp)
+    print("******************** UDP Header *******************")
+    print("src_port", packet.udp.src_port)
+    print("dst_port", packet.udp.dst_port)
+    print("length", packet.udp.length)
+    print("checksum", packet.udp.checksum)
+    print("data", packet.udp.data)
+    print("raw packet =", packet.raw)
+#  elif packet.eth.type == 0x0800 and packet.ip.protocol == 6 and ( packet.ip.dstIp == '172.16.0.143' or packet.ip.srcIp == '172.16.0.143' ):
+  elif packet.eth.type == 0x0800 and packet.ip.protocol == 6 and ( packet.ip.dstIp == '192.168.0.104' or packet.ip.srcIp == '192.168.0.104' ):
+    print("********************* IP Header ********************")
+    print(packet.ip.srcIp, '->', packet.ip.dstIp, packet.eth.type)
+    print('version =', packet.ip.version)
+    print('headerLen =', packet.ip.headerLen)
+    print('typeOfService =', packet.ip.typeOfService)
+    print('totLength =', packet.ip.totLength)
+    print('identification =', packet.ip.identification)
+    print('ipFlags =', packet.ip.ipFlags)
+    print('fragmentOffset =', packet.ip.fragmentOffset)
+    print('timeToLive =', packet.ip.timeToLive)
+    print('protocol =', packet.ip.protocol)
+    print('headerChecksum =', packet.ip.headerChecksum)
+    print('srcIp =', packet.ip.srcIp)
+    print('dstIp =', packet.ip.dstIp)
+    print("******************** TCP Header *******************")
+    print("src_port", packet.tcp.src_port)
+    print("dst_port", packet.tcp.dst_port)
+    print("seq_num", packet.tcp.seq_num)
+    print("ack_num", packet.tcp.ack_num)
+    print("offset", packet.tcp.offset)
+    print("rsv", packet.tcp.rsv)
+    print("flags", packet.tcp.flags)
+    print("window", packet.tcp.window)
+    print("checksum", packet.tcp.checksum)
+    print("urg", packet.tcp.urg)
+#    print("data", packet.tcp.data)
+    print("raw packet =", packet.raw)
